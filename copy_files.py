@@ -1,13 +1,13 @@
 import shutil
 import os
 import re
-from database_manager import DatabaseManager
+from lhk_cs_migration_repository import CsMigrationRepository
 
 def copy_directory(source_dir, target_dir):
     if not os.path.exists(target_dir):
         os.makedirs(target_dir)
 
-    with DatabaseManager() as db_manager:
+    with CsMigrationRepository() as cs_migration_repository:
         for item in os.listdir(source_dir):
             # Полный путь к текущему элементу в исходной директории
             source_path = os.path.join(source_dir, item)
@@ -23,11 +23,11 @@ def copy_directory(source_dir, target_dir):
                         new_folder_name = increment_folder_name(base_name, target_dir)
                         #print(f'Новая имя папки {target_dir + "\\" + new_folder_name}')
                         shutil.copytree(source_path, target_dir + "\\" + new_folder_name)
-                        db_manager.add_copied_file(source_path, target_dir +"\\" + new_folder_name, 1)
+                        cs_migration_repository.add_copied_file(source_path, target_dir + "\\" + new_folder_name, 1)
                 else:
                     shutil.copytree(source_path, target_path)
                     print(f'Директория {source_path} скопирована в {target_path}')
-                    db_manager.add_copied_file(source_path, target_path, 1)
+                    cs_migration_repository.add_copied_file(source_path, target_path, 1)
 
             else:
                 # Если это файл, копируем файл
@@ -37,12 +37,12 @@ def copy_directory(source_dir, target_dir):
                         new_name = increment_filename(target_path, target_dir)
                         #print(f'Новое имя {new_name}')
                         shutil.copy2(source_path, new_name)
-                        db_manager.add_copied_file(source_path, new_name, 0)
+                        cs_migration_repository.add_copied_file(source_path, new_name, 0)
 
                 else:
                     shutil.copy2(source_path, target_path)
                     #print(f'Файл {source_path} скопирован в {target_path}')
-                    db_manager.add_copied_file(source_path, target_path, 0)
+                    cs_migration_repository.add_copied_file(source_path, target_path, 0)
 
 def increment_filename(file_name, target_dir):
     # Извлекаем имя файла и расширение
@@ -103,13 +103,13 @@ def is_vol_folder(folder_name):
 
 #copy_directory("F:\\CSDB\\P.RVG\\P0005376", "F:\\CS8DB\\310183-12953")
 
-with DatabaseManager() as db_manager:
-    patients = db_manager.find_not_done_patients()
+with CsMigrationRepository() as cs_migration_repository:
+    patients = cs_migration_repository.find_not_done_patients()
     for patient in patients:
         if not check_path(patient.ssn):
             target_dir = 'F:\\CS8DB\\' + patient.ssn.strip()
             print(f'Copying {patient.folder} to {target_dir}')
             copy_directory(patient.folder, target_dir.strip())
-            db_manager.update_done(patient.dicom_patient_id, 1)
+            cs_migration_repository.update_done(patient.dicom_patient_id, 1)
 
 

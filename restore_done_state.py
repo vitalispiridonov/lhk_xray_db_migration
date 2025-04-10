@@ -1,5 +1,5 @@
 import os
-from database_manager import DatabaseManager
+from lhk_cs_migration_repository import CsMigrationRepository
 
 def get_folder_names(directory):
     # Получаем список всех элементов в директории
@@ -11,9 +11,9 @@ def get_folder_names(directory):
     return folders
 
 
-with DatabaseManager() as db_manager:
+with CsMigrationRepository() as cs_migration_repository:
     directory_path = 'F:\\CS8DB'
     folder_names = get_folder_names(directory_path)
     for folder in folder_names:
         print(f"Найденная папка: {folder}")
-        db_manager.update_done_by_ssn(folder, 1)
+        cs_migration_repository.update_done_by_ssn(folder, 1)

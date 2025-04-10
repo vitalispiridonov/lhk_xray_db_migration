@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 from patient import parse_patient_file
-from database_manager import DatabaseManager
+from lhk_cs_migration_repository import CsMigrationRepository
 
 
 def get_subdirectories(directory):
@@ -17,7 +17,7 @@ def list_folders(directory):
 
     return folders
 
-with DatabaseManager() as db_manager:
+with CsMigrationRepository() as cs_migration_repository:
     directory = 'F:\\CSDB'
     db_directory_names = get_subdirectories(directory)
     for db_directory_name in db_directory_names:
@@ -29,7 +29,7 @@ with DatabaseManager() as db_manager:
             if os.path.exists(patient_folder + "\\FILEDATA.TXT"):
                 patient = parse_patient_file(patient_folder)
                 #print(patient)
-                patient_exists = db_manager.is_patient_exists_by_dicom_patient_id(patient.dicom_patient_id)
+                patient_exists = cs_migration_repository.is_patient_exists_by_dicom_patient_id(patient.dicom_patient_id)
                 if not patient_exists:
                     print(f'New Patient {patient.dicom_patient_id}')
-                    db_manager.add_patient(patient)
+                    cs_migration_repository.add_patient(patient)
