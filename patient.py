@@ -29,7 +29,7 @@ class Patient:
                 f"EXTNUM={self.extnum}), "
                 f"SSN_FOUND={self.ssn_found})")
 
-    def compare_dats(self, patient):
+    def compare_dates(self, patient):
         dates_same = True
         if self.date and patient.date:
             date1 = self.date
@@ -40,12 +40,12 @@ class Patient:
             if isinstance(date2, str):
                 date2 = datetime.strptime(patient.date, "%Y-%m-%d").date()
 
+            dates_same = date1 == date2
+
         return dates_same
 
     def is_same(self, patient):
-        dates_same = self.compare_dats(patient)
-        print(f"Dates same: {dates_same}")
-
+        dates_same = self.compare_dates(patient)
 
         res = (self.first_name == patient.first_name and
                self.last_name == patient.last_name and
