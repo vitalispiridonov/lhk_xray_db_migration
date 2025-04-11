@@ -3,16 +3,19 @@ from datetime import datetime
 import chardet
 
 class Patient:
-    def __init__(self, dicom_patient_id, folder, first_name, last_name, date, ssn, photo, extnum, ssn_found):
+    def __init__(self, dicom_patient_id=None, directory=None, first_name=None, last_name=None, birth_date=None,
+                 ssn=None, photo=None, extnum=None, ssn_found=None, internal_id=None, sex=None):
         self.dicom_patient_id = dicom_patient_id
-        self.folder = folder
+        self.folder = directory
         self.first_name = first_name
         self.last_name = last_name
-        self.date = date
+        self.date = birth_date
         self.ssn = ssn
         self.photo = photo
         self.extnum = extnum
         self.ssn_found = ssn_found
+        self.internal_id = internal_id
+        self.sex = sex
 
     def __repr__(self):
         return (f"Patient"
@@ -25,6 +28,34 @@ class Patient:
                 f"PHOTO={self.photo}, "
                 f"EXTNUM={self.extnum}), "
                 f"SSN_FOUND={self.ssn_found})")
+
+    def compare_dats(self, patient):
+        dates_same = True
+        if self.date and patient.date:
+            date1 = self.date
+            if isinstance(date1, str):
+                date1 = datetime.strptime(self.date, "%Y-%m-%d").date()
+
+            date2 = patient.date
+            if isinstance(date2, str):
+                date2 = datetime.strptime(patient.date, "%Y-%m-%d").date()
+
+        return dates_same
+
+    def is_same(self, patient):
+        dates_same = self.compare_dats(patient)
+        print(f"Dates same: {dates_same}")
+
+
+        res = (self.first_name == patient.first_name and
+               self.last_name == patient.last_name and
+               dates_same)
+
+        if not res:
+            print(f"Firstname: {self.first_name == patient.first_name}")
+            print(f"Lastname: {self.last_name == patient.last_name}")
+
+        return res
 
 
 def convert_to_date(date_string):

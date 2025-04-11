@@ -8,15 +8,6 @@ from lhk_cs_migration_repository import CsMigrationRepository
 def get_subdirectories(directory):
     return [p.name for p in Path(directory).iterdir() if p.is_dir()]
 
-def list_folders(directory):
-    folders = []
-
-    for root, dirs, files in os.walk(directory):
-        print(dirs)
-
-
-    return folders
-
 with CsMigrationRepository() as cs_migration_repository:
     directory = 'F:\\CSDB'
     db_directory_names = get_subdirectories(directory)
