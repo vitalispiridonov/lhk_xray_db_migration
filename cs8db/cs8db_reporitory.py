@@ -2,8 +2,7 @@ from database_manager import DatabaseManager
 import pyodbc
 
 from patient import Patient
-
-from patient_xml_parser import PatientXMLParser
+from client import Client
 
 
 server = 'WIN-5HQEEVML4E9\\CSISSERVER'
@@ -178,4 +177,21 @@ class Cs8DbRepository():
             self.cs8db.connection.commit()
         except pyodbc.Error as e:
             print("❌ Error when adding log:", e)
+            return None
+
+    def get_client_by_key(self, key):
+        try:
+            select_query = """SELECT pc_key, cabinet_nr, clinic_id, type FROM pc_clients WHERE pc_key = ?"""
+            self.cs8db.cursor.execute(select_query, (key))
+            row = self.cs8db.cursor.fetchone()
+            if row:
+                return Client(
+                    key=row.pc_key,
+                    cabinet_nr=row.cabinet_nr,
+                    clinic_id=row.clinic_id,
+                    type=row.type
+                )
+            return None
+        except pyodbc.Error as e:
+            print("❌ Ошибка при поиске пациента:", e)
             return None

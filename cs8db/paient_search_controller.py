@@ -9,7 +9,6 @@ def ping():
 
 @app.route('/patients/search', methods=['GET'])
 def get_patient():
-
     first_name = request.args.get("first_name")
     last_name = request.args.get("last_name")
     birth_date = request.args.get("birth_date")
@@ -36,6 +35,21 @@ def get_patient():
         print(e)
 
     return jsonify([])
+
+@app.route('/client', methods=['GET'])
+def get_client():
+    key = request.args.get("key")
+
+    try:
+        with Cs8DbRepository() as cs8db:
+            client = cs8db.get_client_by_key(key)
+            if client:
+                return jsonify(client.to_dict())
+            return jsonify({})
+    except Exception as e:
+        print(e)
+
+    return jsonify({})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
