@@ -13,7 +13,21 @@ def search_patients():
     }
     return jsonify([patient])
 
-@app.route('/client', methods=['GET'])
+@app.route('/patients/search', methods=['GET'])
+def get_patient_xrays():
+    patient_ssn = request.args.get("patient_ssn")
+
+    # Search patieng by ssn
+
+    xrays = [
+        {'name': 'VOL_1', 'type': '3D', 'date_time': '2024-11-01 14:50'},
+        {'name': 'VOL_2', 'type': '3D', 'date_time': '2023-05-12 9:34'},
+        {'name': 'c1', 'type': 'Crio', 'date_time': '2020-01-20 14:18'},
+        {'name': 'c2', 'type': 'Crio', 'date_time': '2022-07-20 14:20'},
+        {'name': 'p1', 'type': 'Pano', 'date_time': '2022-07-20 17:53'}
+    ]
+
+@app.route('/clients', methods=['GET'])
 def get_client():
     key = request.args.get("key")
 
