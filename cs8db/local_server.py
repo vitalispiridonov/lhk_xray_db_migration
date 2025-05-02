@@ -55,7 +55,8 @@ def get_client():
         "key": key,
         "cabinet_nr": "TEST-001",
         "clinic_id": 1,
-        "type": "cab"
+        "type": "cab",
+        "move_allowed": "false"
     }
     return jsonify(client)
 
