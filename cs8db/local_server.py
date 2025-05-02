@@ -30,12 +30,21 @@ def get_patient_xrays():
     return jsonify(xrays)
 
 @app.route('/patients/xrays/move', methods=['POST'])
-def get_patient_xrays():
-    source_patient_ssn = request.args.get("source_patient_ssn")
-    source_patient_ssn = request.args.get("destination_patient_ssn")
-    xray_name = request.args.get("xray_name")
+def move_patient_xray():
+    source_patient_ssn = request.form.get('source_patient_ssn')
+    target_patient_ssn = request.form.get('target_patient_ssn')
+    xray_name = request.form.get('xray_name')
 
-    return jsonify({"result": "OK"})
+    is_verified = request.form.get('is_verified').lower() in ['true', '1', 'yes', 'on']
+    patient_ssn = request.form.get('xray_patient_ssn', '').strip()
+    patient_name = request.form.get('xray_patient_name', '').strip()
+
+    if is_verified and patient_ssn and patient_name:
+        # Move xray
+        return jsonify({'result': 'OK'})
+    else:
+        xray_patient_data = {"ssn": target_patient_ssn, "name": "John Doe"}
+        return jsonify({'result': 'VERIFICATION_REQUIRED', 'xray_patient_data': xray_patient_data})
 
 
 @app.route('/clients', methods=['GET'])
