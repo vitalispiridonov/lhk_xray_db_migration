@@ -1,7 +1,7 @@
 from database_manager import DatabaseManager
 import pyodbc
 
-from patient import Patient
+from domain.patient import Patient
 from client import Client
 
 

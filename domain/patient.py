@@ -92,10 +92,10 @@ def parse_patient_file(folder_path):
 
     patient = Patient(
         dicom_patient_id=patient_data.get('NUMERO', ''),
-        folder=folder_path,
+        directory=folder_path,
         first_name=patient_data.get('NOM', ''),
         last_name=patient_data.get('PRENOM', ''),
-        date=convert_to_date(patient_data.get('DATE', '')),
+        birth_date=convert_to_date(patient_data.get('DATE', '')),
         ssn=patient_data.get('SECU', ''),
         photo=patient_data.get('PHOTO', ''),
         extnum=patient_data.get('EXTNUM', ''),

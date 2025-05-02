@@ -1,6 +1,5 @@
 from cs8db_reporitory import Cs8DbRepository
 from patient_xml_parser import PatientXMLParser
-from patient import Patient
 
 import os
 

@@ -1,5 +1,8 @@
 from flask import Flask, jsonify, request
 from cs8db_reporitory import Cs8DbRepository
+from patient_xray_service import PatientXrayService
+
+from patient_xray_service import PatientXrayService
 
 app = Flask(__name__)
 
@@ -36,7 +39,7 @@ def get_patient():
 
     return jsonify([])
 
-@app.route('/client', methods=['GET'])
+@app.route('/clients', methods=['GET'])
 def get_client():
     key = request.args.get("key")
 
@@ -50,6 +53,34 @@ def get_client():
         print(e)
 
     return jsonify({})
+
+@app.route('/patients/xrays', methods=['GET'])
+def get_patient_xrays():
+    patient_ssn = request.args.get("patient_ssn")
+
+    patient_service = PatientXrayService()
+    xrays = patient_service.find_patients_xrays(patient_ssn)
+
+    return jsonify([x.to_dict() for x in xrays])
+
+@app.route('/patients/xrays/move', methods=['POST'])
+def move_patient_xrays():
+    source_patient_ssn = request.form.get('source_patient_ssn')
+    target_patient_ssn = request.form.get('target_patient_ssn')
+    xray_name = request.form.get('xray_name')
+
+    is_verified = request.form.get('is_verified').lower() in ['true', '1', 'yes', 'on']
+    xray_patient_ssn = request.form.get('xray_patient_ssn', '').strip()
+    xray_patient_name = request.form.get('xray_patient_name', '').strip()
+
+    patient_xray_service = PatientXrayService()
+
+    if is_verified and xray_patient_ssn and xray_patient_name:
+        patient_xray_service.move_xray(xray_name, source_patient_ssn, target_patient_ssn, xray_patient_ssn, xray_patient_name)
+        return jsonify({'result': 'OK'})
+    else:
+        xray_patient_data = patient_xray_service.get_patient_info(target_patient_ssn)
+        return jsonify({'result': 'VERIFICATION_REQUIRED', 'xray_patient_data': xray_patient_data})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

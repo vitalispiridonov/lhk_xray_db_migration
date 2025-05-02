@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 
-from patient import Patient
+from domain.patient import Patient
 
 class PatientXMLParser:
 

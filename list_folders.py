@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from patient import parse_patient_file
+from domain.patient import parse_patient_file
 from lhk_cs_migration_repository import CsMigrationRepository
 
 

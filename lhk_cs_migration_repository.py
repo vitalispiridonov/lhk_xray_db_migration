@@ -1,5 +1,5 @@
 import pyodbc
-from patient import Patient
+from domain.patient import Patient
 from database_manager import DatabaseManager
 
 server = 'WIN-5HQEEVML4E9\\CSISSERVER'
@@ -12,6 +12,16 @@ class CsMigrationRepository:
 
     def __init__(self):
         self.dbManager = DatabaseManager(server, database, username, password)
+
+    def __enter__(self):
+        self.dbManager.__enter__()
+        return self
+
+    def __exit__(self, type, value, traceback):
+        if (self.dbManager):
+            self.dbManager.__exit__(type, value, traceback)
+
+
 
     def add_patient(self, patient):
         try:
